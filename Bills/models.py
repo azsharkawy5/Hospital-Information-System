@@ -27,7 +27,3 @@ class Medicine_service(models.Model):
 
 
 
-class Appointment(models.Model):
-    id = models.AutoField(primary_key=True)
-    bill_id = models.ForeignKey(Bill, on_delete=models.CASCADE)
-    # Appointment_id = models.IntegerField()

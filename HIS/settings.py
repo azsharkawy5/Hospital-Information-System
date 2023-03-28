@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'Bills',
+    'Appoitments',
     'Core',
     'rest_framework',
     'Hospital',
@@ -86,7 +87,7 @@ DATABASES = {
         'NAME': 'his',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': '1234'
+        'PASSWORD': 'mohab123'
     }
 }
 
