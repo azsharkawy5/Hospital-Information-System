@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'Hospital',
     'Records',
     'phonenumber_field',
+    'Lab_Radiology',
 ]
 
 MIDDLEWARE = [
@@ -87,7 +88,7 @@ DATABASES = {
         'NAME': 'his',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': 'mohab123'
+        'PASSWORD': 'Eman.Moh123@',
     }
 }
 
