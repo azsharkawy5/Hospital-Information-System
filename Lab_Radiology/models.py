@@ -1,6 +1,6 @@
 from django.db import models
 from datetime import datetime
-from Hospital.models import Doctor
+from Hospital.models import Patient, Doctor
 
 
 class Exam_Request(models.Model):
@@ -13,8 +13,8 @@ class Exam_Request(models.Model):
         (PENDING, 'Pending'),
         (COMPLETED, 'Completed'),
     ]
-    # patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    # doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT)
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT)
     status = models.CharField(max_length=10, choices=STATUS, default=REQUESTED)
     dateTime = models.DateTimeField(default=datetime.now)
 

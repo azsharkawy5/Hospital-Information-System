@@ -10,6 +10,7 @@ mysqlclient = "*"
 django-phonenumber-field = "*"
 phonenumbers = "*"
 pillow = "*"
+django-rename-app = "*"
 
 [dev-packages]
 

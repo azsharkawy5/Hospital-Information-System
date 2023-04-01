@@ -38,14 +38,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'phonenumber_field',
     'Bills',
-    'Appoitments',
+    'Appointments',
     'Core',
     'rest_framework',
     'Hospital',
     'Records',
-    'phonenumber_field',
     'Lab_Radiology',
+
     'Pharmacy',
 ]
 

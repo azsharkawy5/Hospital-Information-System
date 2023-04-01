@@ -1,4 +1,5 @@
 from django.db import models
+from Hospital.models import *
 # Create your models here.
 days = [
     ('Saturday', 'Saturday'), 
@@ -19,7 +20,7 @@ type_of_appointment = [('new', 'new'), ('followup', 'followup')]
 class doctor_schedule(models.Model):
     
     schedule_id = models.AutoField(primary_key=True)
-    # doctor_id = models.ForeignKey(doctor, on_delete=models.CASCADE)
+    doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     day_of_week = models.CharField(max_length=50, choices=days)
     start_time = models.TimeField()
     end_time = models.TimeField()
@@ -42,8 +43,8 @@ class slot(models.Model):
 
 class booked_appointment(models.Model):
     appointment_id = models.AutoField(primary_key=True)
-    # doctor_id = models.ForeignKey(doctor, on_delete=models.CASCADE)
-    # patient_id = models.ForeignKey(patient, on_delete=models.CASCADE)
+    patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    doctor_id = models.ForeignKey(Doctor, on_delete=models.CASCADE)
     appointment_date = models.DateField()
     slot_id = models.ForeignKey(slot, on_delete=models.PROTECT)
     appointment_type = models.CharField(max_length=50, choices=type_of_appointment)

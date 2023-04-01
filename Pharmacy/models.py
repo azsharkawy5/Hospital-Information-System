@@ -1,5 +1,6 @@
 from django.db import models
 from django.conf import settings
+from Hospital.models import Patient
 # Create your models here.
 
 
@@ -19,15 +20,15 @@ class Drug(models.Model):
 
 class current_medication(models.Model):
     current_medication_id = models.AutoField(primary_key=True)
-    patient_id = models.IntegerField()
+    patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE, default=1)
     Appointment_id = models.IntegerField()
     time_date = models.DateTimeField()
 
 
 
 class DrugReDetails(models.Model):
-    Current_medication_id = models.ForeignKey(current_medication, on_delete=models.CASCADE)
-    drug_id = models.ForeignKey(Drug, on_delete=models.CASCADE)
+    Current_medication_id = models.ForeignKey(current_medication, on_delete=models.CASCADE, default=1)
+    drug_id = models.ForeignKey(Drug, on_delete=models.CASCADE, default=1)
     amount = models.IntegerField()
     frquency = models.IntegerField()
     duration = models.IntegerField()
@@ -45,12 +46,12 @@ class Pharmacist(models.Model):
 
 class dispensin(models.Model):
     dispensin_id = models.AutoField(primary_key=True)
-    current_medication_id = models.ForeignKey(current_medication, on_delete=models.CASCADE)
-    Pharmacist_id = models.ForeignKey(Pharmacist, on_delete=models.CASCADE)
+    current_medication_id = models.ForeignKey(current_medication, on_delete=models.CASCADE, default=1)
+    Pharmacist_id = models.ForeignKey(Pharmacist, on_delete=models.CASCADE, default=1)
     time_date = models.DateTimeField()
 
 
 
 class dispensin_details(models.Model):
-    dispensin_id = models.ForeignKey(dispensin, on_delete=models.CASCADE)
-    drug_id = models.ForeignKey(Drug, on_delete=models.CASCADE)
+    dispensin_id = models.ForeignKey(dispensin, on_delete=models.CASCADE, default=1)
+    drug_id = models.ForeignKey(Drug, on_delete=models.CASCADE, default=1)
