@@ -1,9 +1,9 @@
 from django.contrib import admin
-from .models import Bill, Exam_service, Medicine_service
+from .models import Bill, ExamService, MedicineService
 
 # Register your models here.
 
 admin.site.register(Bill)
-admin.site.register(Exam_service)
-admin.site.register(Medicine_service)
+admin.site.register(ExamService)
+admin.site.register(MedicineService)
 

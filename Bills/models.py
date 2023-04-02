@@ -1,8 +1,8 @@
 from django.db import models
-from Appointments.models import booked_appointment
+from Appointments.models import BookedAppointment
 from Hospital.models import Patient
-from Pharmacy.models import current_medication
-from Lab_Radiology.models import Exam_Request
+from Pharmacy.models import CurrentMedication
+from Lab_Radiology.models import ExamRequest
 
 
 
@@ -10,7 +10,7 @@ from Lab_Radiology.models import Exam_Request
 
 class InsuranceDetails(models.Model):
     id = models.AutoField(primary_key=True)
-    patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE,related_name='InsuranceDetails')
     company = models.CharField(max_length=50)
     number = models.IntegerField()
     type = models.CharField(max_length=50)
@@ -22,28 +22,28 @@ class InsuranceDetails(models.Model):
 
 class Bill(models.Model):
     id = models.AutoField(primary_key=True)
-    patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
+    patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE,related_name='Bill')
     time_date = models.DateTimeField()
-    insurance = models.ForeignKey(InsuranceDetails, on_delete=models.CASCADE)
+    insurance = models.ForeignKey(InsuranceDetails, on_delete=models.CASCADE,related_name='Bill')
     
 
 
-class Appointment_service(models.Model):
+class AppointmentService(models.Model):
     id = models.AutoField(primary_key=True)
-    bill_id = models.ForeignKey(Bill, on_delete=models.CASCADE)
-    appointment_id = models.ForeignKey(booked_appointment, on_delete=models.CASCADE)
+    bill_id = models.ForeignKey(Bill, on_delete=models.CASCADE,related_name='AppointmentService')
+    appointment_id = models.ForeignKey(BookedAppointment, on_delete=models.CASCADE,related_name='AppointmentService')
 
-class Exam_service(models.Model):
+class ExamService(models.Model):
     id = models.AutoField(primary_key=True)
-    bill_id = models.ForeignKey(Bill, on_delete=models.CASCADE)
-    exam_request_id = models.ForeignKey(Exam_Request, on_delete=models.CASCADE)
+    bill_id = models.ForeignKey(Bill, on_delete=models.CASCADE,related_name='ExamService')
+    exam_request_id = models.ForeignKey(ExamRequest, on_delete=models.CASCADE,related_name='ExamService')
 
 
 
-class Medicine_service(models.Model):
+class MedicineService(models.Model):
     id = models.AutoField(primary_key=True)
-    bill_id = models.ForeignKey(Bill, on_delete=models.CASCADE)
-    current_medicine_id = models.ForeignKey(current_medication, on_delete=models.CASCADE)
+    bill_id = models.ForeignKey(Bill, on_delete=models.CASCADE,related_name='MedicineService')
+    medication_id = models.ForeignKey(CurrentMedication, on_delete=models.CASCADE,related_name='MedicineService')
 
 
 
