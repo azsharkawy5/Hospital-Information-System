@@ -1,58 +1,60 @@
 from django.db import models
 from django.conf import settings
-from Hospital.models import Patient
+from Hospital.models import Patient,Doctor
+from Appointments.models import BookedAppointment
+from datetime import datetime
 # Create your models here.
 
 
 class Drug(models.Model):
-    id = models.AutoField(primary_key=True)
+
     name = models.CharField(max_length=50)
     drug_form = models.CharField(max_length=50)
     brand_name = models.CharField(max_length=50)
-    price = models.IntegerField()
     company = models.CharField(max_length=50)
     description = models.CharField(max_length=100, null=True)
-    stock_level = models.IntegerField()
+    stock_level = models.PositiveIntegerField(default=0)
     expiry_date = models.DateField()
+    price = models.IntegerField()
 
     def __str__(self):
         return self.name + ' ' + self.brand_name
     
 
 class CurrentMedication(models.Model):
-    medication_id = models.AutoField(primary_key=True)
-    patient_id = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    Appointment_id = models.IntegerField()
-    time_date = models.DateTimeField()
+    
+    patient = models.ForeignKey(Patient, on_delete=models.CASCADE,related_name='patient_medication')
+    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE,related_name='doctor_request')
+    appointment = models.ForeignKey(BookedAppointment, on_delete=models.CASCADE,related_name='appointment')
 
 
 
-class DrugReDetail(models.Model):
-    medication_id = models.ForeignKey(CurrentMedication, on_delete=models.CASCADE,related_name='DrugReDetail')
-    drug_id = models.ForeignKey(Drug, on_delete=models.CASCADE)
-    amount = models.IntegerField()
-    frquency = models.IntegerField()
-    duration = models.IntegerField()
-    dispense = models.IntegerField()
+class DrugRequestDetail(models.Model):
+
+    medication = models.ForeignKey(CurrentMedication, on_delete=models.CASCADE,related_name='medication_detail')
+    drug = models.ForeignKey(Drug, on_delete=models.CASCADE,related_name='drug_detail')
+    frquency = models.CharField(max_length=50)
+    duration = models.PositiveIntegerField()
+    dispense = models.BooleanField(default=False)
 
 
 
 
 class Pharmacist(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    Pharmacist_license = models.IntegerField()
+    Pharmacist_license = models.CharField(max_length=50)
 
 
 
 
 class Dispensing(models.Model):
-    dispensin_id = models.AutoField(primary_key=True)
-    medication_id = models.ForeignKey(CurrentMedication, on_delete=models.CASCADE)
-    Pharmacist_id = models.ForeignKey(Pharmacist, on_delete=models.CASCADE)
+
+    medication = models.ForeignKey(CurrentMedication, on_delete=models.CASCADE,related_name='medication_dispense')
+    Pharmacist = models.ForeignKey(Pharmacist, on_delete=models.CASCADE,related_name='dispenser')
     time_date = models.DateTimeField()
 
 
 
 class DispensingDetails(models.Model):
-    dispensin_id = models.ForeignKey(Dispensing, on_delete=models.CASCADE)
-    drug_id = models.ForeignKey(Drug, on_delete=models.CASCADE)
+    dispensing = models.ForeignKey(Dispensing, on_delete=models.CASCADE,related_name='dispensing_detail')
+    drug = models.ForeignKey(Drug, on_delete=models.CASCADE,related_name='drug_dispense')

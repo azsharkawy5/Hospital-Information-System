@@ -1,5 +1,6 @@
 from django.db import models
 from datetime import datetime
+from django.conf import settings
 from Hospital.models import Patient, Doctor
 
 
@@ -15,45 +16,46 @@ class ExamRequest(models.Model):
         (COMPLETED, 'Completed'),
         (CANCELLED, 'Cancelled'),
     ]
-    request_id = models.AutoField(primary_key=True)
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE)
-    doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT)
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, related_name='patient_exam')
+    doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT, related_name='doctor_exam')
     status = models.CharField(max_length=10, choices=STATUS, default=REQUESTED)
     dateTime = models.DateTimeField(default=datetime.now)
 
-    def __str__(self):
-        return str(self.request_id)
 
 class RadiolgyResult(models.Model):
-    Request_id = models.ForeignKey(ExamRequest, on_delete=models.CASCADE,related_name='RadiologyRequest')
+    Request = models.ForeignKey(ExamRequest, on_delete=models.CASCADE,related_name='radiolgy_request')
     dateTime = models.DateTimeField(default=datetime.now)
-    image = models.ImageField(blank=False)
-    file = models.FileField(blank=False, default='test')
-    comment = models.TextField(max_length=3000, blank=True)
+    image = models.ImageField(upload_to='Lab_Radiology/files/media')
+    report_file = models.FileField(upload_to='Lab_Radiology/files')
+    comment = models.TextField(blank=True)
 
 
 class TestResult(models.Model):
-    Request_id = models.ForeignKey(ExamRequest, on_delete=models.CASCADE, related_name='TestResult')
+    Request = models.ForeignKey(ExamRequest, on_delete=models.CASCADE, related_name='test_request')
     dateTime = models.DateTimeField(default=datetime.now)
     result_value = models.DecimalField(
-        max_digits=10, decimal_places=5, null=True)
-    unit = models.CharField(max_length=50, blank=False,  null=True)
+        max_digits=10, decimal_places=5)
+    unit = models.CharField(max_length=50)
     min_reference_range = models.DecimalField(
-        max_digits=10, decimal_places=5, null=True)
+        max_digits=10, decimal_places=5)
     max_reference_range = models.DecimalField(
-        max_digits=10, decimal_places=5, null=True)
-    comment = models.TextField(max_length=3000, blank=True, null=True)
+        max_digits=10, decimal_places=5)
+    comment = models.TextField(blank=True)
 
 
 class ExaminationList(models.Model):
-    exam_id = models.AutoField(primary_key=True)
     exam_name = models.CharField(max_length=255)
     exam_type = models.CharField(max_length=255)
     price = models.DecimalField(max_digits=15, decimal_places=2)
 
 
 class ExamDetails(models.Model):
-    exam_id = models.ForeignKey(
-        ExaminationList, null=False, on_delete=models.PROTECT, related_name='ExamDetails')
-    request_id = models.ForeignKey(
-        ExamRequest, null=False, on_delete=models.CASCADE, related_name='ExamDetails')
+    exam = models.ForeignKey(
+        ExaminationList, null=False, on_delete=models.PROTECT, related_name='exam')
+    request = models.ForeignKey(
+        ExamRequest, null=False, on_delete=models.CASCADE, related_name='request')
+
+
+
+class LabRadiologyStaff(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

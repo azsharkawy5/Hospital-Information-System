@@ -41,7 +41,8 @@ class SurgeryInfo(models.Model):
     doctor = models.ForeignKey(Doctor,on_delete=models.PROTECT,related_name='surgeon')
     surgery_type = models.CharField(max_length=255)
     date = models.DateField()
-    time = models.TimeField()
+    start_time = models.TimeField()
+    end_time = models.TimeField()
     documentation = models.FileField()
     def __str__(self) -> str:
         try :
