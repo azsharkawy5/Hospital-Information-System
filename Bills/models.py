@@ -11,9 +11,9 @@ from Lab_Radiology.models import ExamRequest
 class InsuranceDetails(models.Model):
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE,related_name='InsuranceDetails')
     company = models.CharField(max_length=30)
-    number = models.PositiveIntegerField()
+    number = models.CharField(max_length=30)
     expairy_date = models.DateField()
-    coverage = models.CharField(max_length=50)
+    coverage = models.TextField()
     card = models.ImageField(upload_to='Bills/files/media')
 
 class Bill(models.Model):

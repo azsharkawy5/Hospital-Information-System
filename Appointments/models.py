@@ -25,8 +25,8 @@ class DoctorSchedule(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
     slot_duration = models.IntegerField(choices=appointment_duration)
-    schedule_status = models.CharField(max_length=10, choices=Schedule_Status)
-    price = models.PositiveIntegerField()
+    schedule_status = models.CharField(max_length=10, choices=Schedule_Status,default='active')
+    price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
     def __str__(self):
         return self.doctor.__str__()
@@ -53,8 +53,8 @@ class Slot(models.Model):
 
 class BookedAppointment(models.Model):
     
-    patient = models.ForeignKey(Patient, on_delete=models.CASCADE,related_name='patient_appointment')
-    doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE,related_name='doctor_appointment')
+    patient = models.ForeignKey(Patient, on_delete=models.PROTECT,related_name='patient_appointment')
+    doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT,related_name='doctor_appointment')
     slot = models.ForeignKey(Slot, on_delete=models.PROTECT,related_name='slot_appointment')
     date = models.DateField()
     type = models.CharField(max_length=10, choices=type_of_appointment)
