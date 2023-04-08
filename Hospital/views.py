@@ -15,3 +15,7 @@ class DoctorViewSet(ModelViewSet):
 class NurseViewSet(ModelViewSet):
     queryset = Nurse.objects.select_related('user').all()
     serializer_class = NurseSerializer
+
+class PatientViewSet(ModelViewSet):
+    queryset = Patient.objects.select_related('user').all()
+    serializer_class = PatientSerializer
