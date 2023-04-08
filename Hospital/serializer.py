@@ -12,3 +12,9 @@ class NurseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Nurse
         fields = ['user','__str__','specialty','medical_license']
+
+
+class PatientSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Patient
+        fields = ['user','__str__']
