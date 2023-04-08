@@ -1,4 +1,3 @@
-from django.http import Http404
 from django.shortcuts import render
 from .models import *
 from django.shortcuts import get_object_or_404
@@ -12,3 +11,7 @@ def media(request,id):
 class DoctorViewSet(ModelViewSet):
     queryset = Doctor.objects.select_related('user').all()
     serializer_class = DoctorSerializer
+
+class NurseViewSet(ModelViewSet):
+    queryset = Nurse.objects.select_related('user').all()
+    serializer_class = NurseSerializer
