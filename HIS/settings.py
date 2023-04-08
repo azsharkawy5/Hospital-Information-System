@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'Core',
     'rest_framework',
+    'djoser',
     'Hospital',
     'Records',
     'phonenumber_field',
