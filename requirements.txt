@@ -1,0 +1,2 @@
+pipenv install djoser
+pip install drf-writable-nested
