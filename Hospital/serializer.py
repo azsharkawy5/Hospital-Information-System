@@ -1,20 +1,25 @@
 from rest_framework import serializers
 from drf_writable_nested import WritableNestedModelSerializer
 from .models import *
+from Core.serializer import UserSerializer
+from Core.models import User
 
-class DoctorSerializer(serializers.ModelSerializer):
+class DoctorSerializer(WritableNestedModelSerializer,serializers.ModelSerializer):
     class Meta:
         model = Doctor
-        fields = ['id','user','get_name','specialty','medical_license','department','image']
+        fields = ['id','user','specialty','medical_license','department','image']
+    #user = UserSerializer(read_only =1)
 
 
 class NurseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Nurse
-        fields = ['user','__str__','specialty','medical_license']
+        fields = ['user','specialty','medical_license']
+    #user = UserSerializer(User)
 
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        fields = ['user','__str__']
+        fields = ['user',]
+    #user = UserSerializer(User)
