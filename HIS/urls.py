@@ -23,5 +23,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('<int:id>', views.media),
     path('hospital/',include('Hospital.urls')),
+    path('useradmin/',include('Core.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)
