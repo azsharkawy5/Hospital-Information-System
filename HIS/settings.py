@@ -43,6 +43,10 @@ INSTALLED_APPS = [
     'Hospital',
     'Records',
     'phonenumber_field',
+    'Appointments',
+    'Bills',
+    'Lab_Radiology',
+    'Pharmacy',
 ]
 
 MIDDLEWARE = [

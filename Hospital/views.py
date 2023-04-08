@@ -1,6 +1,6 @@
 from django.http import Http404
 from django.shortcuts import render
-from .models import Doctor
+from .models import *
 from django.shortcuts import get_object_or_404
 # Create your views here.
 def media(request,id):
