@@ -30,4 +30,4 @@ class MedicalRecordSerializer(WritableNestedModelSerializer,serializers.ModelSer
         model = MedicalRecord
         fields =['patient','diagnosis','allergies','family_history','vitals','surgerys']
     vitals = VitalSerializer(Vitals)
-    sergerys = SergeryInfoSerializer(SurgeryInfo)
+    surgerys = SergeryInfoSerializer(SurgeryInfo)
