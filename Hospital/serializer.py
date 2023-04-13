@@ -22,4 +22,4 @@ class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         fields = ['user',]
-    #user = UserSerializer(User)
+    user = UserSerializer(User)

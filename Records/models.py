@@ -42,7 +42,7 @@ class SurgeryInfo(models.Model):
     surgery_type = models.CharField(max_length=255)
     date = models.DateField()
     time = models.TimeField()
-    documentation = models.FileField()
+    documentation = models.FileField(upload_to='Records/surgeries')
     def __str__(self) -> str:
         try :
             return str(self.patient.user.first_name+' '+self.patient.user.last_name)
@@ -90,3 +90,4 @@ class MedicalRecord(models.Model):
             return str(self.patient.user.first_name+' '+self.patient.user.last_name)
         except Patient.DoesNotExist:
             pass
+    

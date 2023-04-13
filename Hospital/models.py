@@ -9,7 +9,7 @@ class Doctor(models.Model):
     department = models.CharField(max_length=50)
     image = models.ImageField(upload_to='Hospital/files/media')
 
-    def get_name(self) -> str:
+    def __str__(self) -> str:
         return str(self.user.first_name+" "+self.user.last_name)
     
     def mediaAdmin(self):
