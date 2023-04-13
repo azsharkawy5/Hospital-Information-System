@@ -91,3 +91,4 @@ class MedicalRecord(models.Model):
             return str(self.patient.user.first_name+' '+self.patient.user.last_name)
         except Patient.DoesNotExist:
             pass
+    

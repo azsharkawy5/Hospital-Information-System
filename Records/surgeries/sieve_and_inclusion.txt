@@ -1,0 +1,26 @@
+ll inclusionExclusion(ll n, vector<int> &v) {
+    int m = v.size();
+    ll ans = 0;
+    for (int i = 1; i < (1 << m); i++) {
+        int Lcm = 1;
+        for (int j = 0; j < m; j++) {
+            if (i >> j & 1) Lcm = lcm(v[j], Lcm);
+        }
+        if (__builtin_popcount(i) % 2 == 0)ans -= (n / Lcm);
+        else ans += (n / Lcm);
+    }
+    return ans;
+}
+
+vector<ll> sieve(ll x) {
+    vector<ll> v(x + 1, true);
+    v[0] = false;
+    v[1] = false;
+    for (int i = 2; i * i <= x; i++) {
+        if (v[i]) {
+            for (int j = i * i; j <= x; j += i)
+                v[j] = false;
+        }
+    }
+    return v;
+}

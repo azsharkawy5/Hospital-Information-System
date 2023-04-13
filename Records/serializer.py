@@ -1,12 +1,13 @@
 from rest_framework import serializers
 from drf_writable_nested import WritableNestedModelSerializer
 from .models import *
+from Hospital.serializer import *
 
 
 class EmergencyContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmergencyContact
-        fields = ['patient','__str__','email','gender','phone','relative_relation']
+        fields = ['patient','first_name','last_name','email','gender','phone','relative_relation']
 
 
 class SergeryInfoSerializer(serializers.ModelSerializer):
@@ -23,11 +24,11 @@ class VisitsSerializer(serializers.ModelSerializer):
 class VitalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vitals
-        fields = '__all__'
+        fields = '__all__' 
 
 class MedicalRecordSerializer(WritableNestedModelSerializer,serializers.ModelSerializer):
     class Meta:
         model = MedicalRecord
-        fields =['patient','diagnosis','allergies','family_history','vitals','surgerys']
-    vitals = VitalSerializer(Vitals)
-    surgerys = SergeryInfoSerializer(SurgeryInfo)
+        fields =['patient','diagnosis','allergies','family_history']
+    patient = PatientSerializer(Patient)
+   
