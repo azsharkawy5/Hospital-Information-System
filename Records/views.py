@@ -57,7 +57,7 @@ class VitalViewSet(ModelViewSet):
 
     def get_queryset(self):
         queryset =  Vitals.objects.select_related('patient__user').all()
-        patient_id = self.request.qeury_params.get('patient_id')
+        patient_id = self.request.query_params.get('patient_id')
         if patient_id is not None:
             queryset = queryset.filter(patient_id=patient_id)
         return queryset
