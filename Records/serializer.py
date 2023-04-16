@@ -7,28 +7,50 @@ from Hospital.serializer import *
 class EmergencyContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = EmergencyContact
-        fields = ['patient','first_name','last_name','email','gender','phone','relative_relation']
+        fields = ['id','first_name','last_name','email','gender','phone','relative_relation']
 
+    def create(self, validated_data):
+            patient_id =self.context['patient_id']
+            return EmergencyContact.objects.create(patient_id=patient_id,**validated_data)
 
 class SergeryInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = SurgeryInfo
-        fields = ['patient','doctor','surgery_type','date','time','documentation']
+        fields = ['id','doctor','surgery_type','date','time','documentation']
+
+    def create(self, validated_data):
+            patient_id =self.context['patient_id']
+            return SurgeryInfo.objects.create(patient_id=patient_id,**validated_data)
 
 
 class VisitsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Visits
-        fields = '__all__'
+        fields = ['id','doctor','nurse','room_number','bed_number','admission_date','discharge_date','diagnosis','notes']
+    
+    def create(self, validated_data):
+        patient_id =self.context['patient_id']
+        return Visits.objects.create(patient_id=patient_id,**validated_data)
+    
 
+
+    
 class VitalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vitals
-        fields = '__all__' 
+        fields = ['id','date','time','height','weight','blood_pressure','heart_rate','temperature']
+
+    def create(self, validated_data):
+        patient_id =self.context['patient_id']
+        return Vitals.objects.create(patient_id=patient_id,**validated_data)
+   
 
 class MedicalRecordSerializer(WritableNestedModelSerializer,serializers.ModelSerializer):
     class Meta:
         model = MedicalRecord
-        fields =['patient','diagnosis','allergies','family_history']
-    patient = PatientSerializer(Patient)
+        fields =['diagnosis','allergies','family_history']
+
+    def create(self, validated_data):
+        patient_id =self.context['patient_id']
+        return MedicalRecord.objects.create(patient_id=patient_id,**validated_data)
    
