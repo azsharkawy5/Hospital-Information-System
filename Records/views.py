@@ -83,3 +83,8 @@ class MedicalRecordViewSet(ModelViewSet):
         pateint = self.kwargs.get('patient_pk')
         return {'patient_id':str(pateint)}        
 
+class PatientRecordsViewSet(ReadOnlyModelViewSet):
+    queryset = Patient.objects.all()
+    serializer_class = PatientAllRecordrSerializer
+     
+

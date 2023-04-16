@@ -24,9 +24,13 @@ class Nurse(models.Model):
     medical_license = models.CharField(max_length=255)
     def __str__(self) -> str:
         return str(self.user.first_name+" "+self.user.last_name)
+        
     
 class Patient(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     def __str__(self) -> str:
         return str(self.user.first_name+" "+self.user.last_name)
+    
+    def name(self):
+        return self.__str__()
 
