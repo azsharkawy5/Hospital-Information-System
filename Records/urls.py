@@ -11,6 +11,7 @@ router.register('visits',views.VisitViewSet,basename='visits')
 router.register('vitals',views.VitalViewSet,basename='vitals')
 router.register('medical-record',views.MedicalRecordViewSet,basename='medicalrecord')
 router.register('patient',Hospital.views.PatientViewSet,basename='patient')
+router.register('all-records',views.PatientRecordsViewSet,basename='all-records')
 
 patient_router = routers.NestedDefaultRouter(router,'patient',lookup ='patient')
 patient_router.register('medical-record',views.MedicalRecordViewSet,basename='medicalrecord')

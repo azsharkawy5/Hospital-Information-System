@@ -53,4 +53,32 @@ class MedicalRecordSerializer(WritableNestedModelSerializer,serializers.ModelSer
     def create(self, validated_data):
         patient_id =self.context['patient_id']
         return MedicalRecord.objects.create(patient_id=patient_id,**validated_data)
+
+class PatientAllRecordrSerializer(serializers.ModelSerializer):
+    medical_record = serializers.SerializerMethodField()
+    vitals = serializers.SerializerMethodField()
+    surgeries = serializers.SerializerMethodField()
+    visits = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Patient
+        fields = ['name','medical_record','vitals','visits','surgeries']
+    
+    def get_vitals(self,obj):
+        vitals = obj.patient_vital.all()
+        return VitalSerializer(vitals,many=True).data
+    
+    def get_visits(self,obj):
+        visits = obj.inpatient.all()
+        return VisitsSerializer(visits,many=True).data
+    
+    def get_surgeries(self,obj):
+        surgeries = obj.patient_surgery.all()
+        return SergeryInfoSerializer(surgeries,many=True).data
+    
+    def get_medical_record(self,obj):
+        medical_record = obj.patient_record
+        return MedicalRecordSerializer(medical_record).data
+    
    
+ 
