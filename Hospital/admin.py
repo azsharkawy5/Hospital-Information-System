@@ -8,3 +8,5 @@ class DoctorAdmin(admin.ModelAdmin):
 
 admin.site.register(Nurse)
 admin.site.register(Patient)
+admin.site.register(Specialty)
+admin.site.register(Department)
