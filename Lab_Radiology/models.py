@@ -2,6 +2,7 @@ from django.db import models
 from datetime import datetime
 from django.conf import settings
 from Hospital.models import Patient, Doctor
+from Appointments.models import Appointment
 
 
 class ExamRequest(models.Model):
@@ -16,8 +17,7 @@ class ExamRequest(models.Model):
         (COMPLETED, 'Completed'),
         (CANCELLED, 'Cancelled'),
     ]
-    patient = models.ForeignKey(Patient, on_delete=models.PROTECT, related_name='patient_exam')
-    doctor = models.ForeignKey(Doctor, on_delete=models.PROTECT, related_name='doctor_exam')
+    appointment = models.ForeignKey(Appointment, on_delete=models.PROTECT, related_name='appointment_exam')
     status = models.CharField(max_length=10, choices=STATUS, default=REQUESTED)
     dateTime = models.DateTimeField(default=datetime.now)
 

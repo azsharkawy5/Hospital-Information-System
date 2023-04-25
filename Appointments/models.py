@@ -28,11 +28,6 @@ class DoctorSchedule(models.Model):
     schedule_status = models.CharField(max_length=10, choices=Schedule_Status,default='active')
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
 
-    def __str__(self):
-        return self.doctor.__str__()
-    
-
-
 
 
 class Slot(models.Model):
@@ -41,8 +36,7 @@ class Slot(models.Model):
     start_time = models.TimeField()
     end_time = models.TimeField()
 
-    def __str__(self):
-        return self.schedule.doctor.__str__()
+
     
     def get_day(self):
         return self.schedule.day_of_week
@@ -60,9 +54,5 @@ class BookedAppointment(models.Model):
     type = models.CharField(max_length=10, choices=type_of_appointment)
     status = models.CharField(max_length=5, choices=appointment_status)
     created_at = models.DateTimeField(auto_now_add=True)
-
-
-    def __str__(self):
-        return self.patient.__str__()
 
 
