@@ -7,16 +7,16 @@ class Department(models.Model):
     def __str__(self) -> str:
         return self.name
         
-class Speciality(models.Model):
+class Specialty(models.Model):
     name = models.CharField(max_length=255)
     def __str__(self) -> str:
         return str(self.name)
 
 class Doctor(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    specialty = models.ForeignKey(Speciality,on_delete=models.CASCADE)
+    specialty = models.ForeignKey(Specialty,on_delete=models.CASCADE)
     medical_license = models.CharField(max_length=255)
-    department = models.CharField(max_length=50)
+    department = models.ForeignKey(Department,on_delete=models.CASCADE)
     image = models.ImageField(upload_to='Hospital/files/media')
 
     def __str__(self) -> str:
