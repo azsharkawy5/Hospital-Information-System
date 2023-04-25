@@ -11,6 +11,9 @@ django-phonenumber-field = "*"
 phonenumbers = "*"
 pillow = "*"
 django-rename-app = "*"
+django-debug-toolbar = "*"
+djoser = "*"
+djangorestframework-simplejwt = "*"
 
 [dev-packages]
 
