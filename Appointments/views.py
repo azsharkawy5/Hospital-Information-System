@@ -1,27 +1,22 @@
 from django.shortcuts import render
 from .models import *
 from Hospital.models import *
-from datetime import  timedelta
-from django.http import HttpResponse
-from rest_framework.generics import ListAPIView 
+from .serializers import *
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework import status
-from rest_framework import filters
 from rest_framework import pagination
 from rest_framework import exceptions
-from .serializers import *
 
 
 
-    
+from pprint import pprint
 
 # this is the view for the all  DoctorSchedule
 class DoctorScheduleViewSet(viewsets.ModelViewSet):
     serializer_class = DoctorScheduleSerializer
     filter_backends = [DjangoFilterBackend] 
+    permission_classes = [IsAuthenticatedOrReadOnly]
     filterset_fields = '__all__'
     pagination_class = pagination.PageNumberPagination
     def get_queryset(self):
