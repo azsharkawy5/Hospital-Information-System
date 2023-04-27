@@ -5,18 +5,23 @@ from Hospital.serializer import *
 
 
 class EmergencyContactSerializer(serializers.ModelSerializer):
+    address = AddressSerializer()
     class Meta:
         model = EmergencyContact
-        fields = ['id','first_name','last_name','email','gender','phone','relative_relation']
+        fields = ['id','first_name','last_name','email','gender','phone_1','phone_2','relative_relation','address']
 
     def create(self, validated_data):
             patient_id =self.context['patient_id']
-            return EmergencyContact.objects.create(patient_id=patient_id,**validated_data)
+            address_data = validated_data.pop('address')
+            address = Address.objects.create(**address_data)
+            return EmergencyContact.objects.create(patient_id=patient_id,address=address,**validated_data)
+    
+
 
 class SergeryInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = SurgeryInfo
-        fields = ['id','doctor','surgery_type','date','time','documentation']
+        fields = ['id','doctor_id','surgery_type','date','time','documentation']
 
     def create(self, validated_data):
             patient_id =self.context['patient_id']
@@ -26,8 +31,8 @@ class SergeryInfoSerializer(serializers.ModelSerializer):
 class VisitsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Visits
-        fields = ['id','doctor','nurse','room_number','bed_number','admission_date','discharge_date','diagnosis','notes']
-    
+        fields = ['id','doctor_id','nurse_id','room_number','bed_number','admission_date','discharge_date','diagnosis','notes']
+     
     def create(self, validated_data):
         patient_id =self.context['patient_id']
         return Visits.objects.create(patient_id=patient_id,**validated_data)
@@ -62,7 +67,7 @@ class PatientAllRecordrSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Patient
-        fields = ['name','medical_record','vitals','visits','surgeries']
+        fields = ['id','medical_record','vitals','visits','surgeries']
     
     def get_vitals(self,obj):
         vitals = obj.patient_vital.all()
@@ -80,5 +85,6 @@ class PatientAllRecordrSerializer(serializers.ModelSerializer):
         medical_record = obj.patient_record
         return MedicalRecordSerializer(medical_record).data
     
-   
+
+
  

@@ -12,10 +12,11 @@ class User(AbstractUser):
     first_name = models.CharField(max_length=255)
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique= 1)
-    gender = models.CharField(max_length=1,choices=genders)
-    phone = PhoneNumberField(blank = 1,null= 1)
-    national_id = models.CharField(max_length=14,unique=1)
-    address = models.CharField(max_length=255)
-    REQUIRED_FIELDS = ['first_name', 'last_name', 'national_id', 'phone', 'email']
+    phone_1 = PhoneNumberField()
+    phone_2 = PhoneNumberField(blank=1,null=1)
+    gender = models.CharField(max_length=1,choices=genders,null=1,blank=1)
+    national_id = models.CharField(max_length=14,unique=1,null=1,blank=1)
+
+    
   
     

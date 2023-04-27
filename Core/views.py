@@ -4,5 +4,5 @@ from .serializer import *
 # Create your views here.
 
 class UserViewSet(ModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+    queryset = User.objects.select_related('user_patient').all()
+    serializer_class = UserCreateSerializer
