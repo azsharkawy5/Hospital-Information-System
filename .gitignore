@@ -1,6 +1,9 @@
-_pycache_
+__pycache__
 media
 *.pyc
 db.sqlite3
 pipfile
 pipfile.lock
+migrations
+files
+surgeries
