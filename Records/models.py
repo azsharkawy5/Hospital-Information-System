@@ -28,23 +28,26 @@ class EmergencyContact(models.Model):
     last_name = models.CharField(max_length=255)
     email = models.EmailField(unique= 1,blank= 1,null= 1)
     gender = models.CharField(max_length=1,choices=genders)
-    phone = PhoneNumberField()
+    phone_1 = PhoneNumberField()
+    phone_2 = PhoneNumberField(blank =1,null =1)
     relative_relation = models.CharField(max_length=12,choices=relatives)
+    national_id = models.CharField(max_length=14,unique=1)
+    address = models.ForeignKey(Address,related_name='emergency_contact_address',on_delete=models.CASCADE)
     def __str__(self) -> str:
         try :
             return str(self.first_name+' '+self.last_name)
         except Patient.DoesNotExist:
             pass
+    #national-id , phone2
 
 class SurgeryInfo(models.Model):
     patient = models.ForeignKey(Patient,on_delete=models.CASCADE,related_name='patient_surgery')
     doctor = models.ForeignKey(Doctor,on_delete=models.PROTECT,related_name='surgeon')
     surgery_type = models.CharField(max_length=255)
     date = models.DateField()
-    start_time = models.TimeField()
-    end_time = models.TimeField()
-    documentation = models.FileField()
-    def __str__(self) -> str:
+    time = models.TimeField()
+    documentation = models.FileField(upload_to='Records/surgeries')
+    def __str__(self) -> str:   
         try :
             return str(self.patient.user.first_name+' '+self.patient.user.last_name)
         except Patient.DoesNotExist:
@@ -91,3 +94,5 @@ class MedicalRecord(models.Model):
             return str(self.patient.user.first_name+' '+self.patient.user.last_name)
         except Patient.DoesNotExist:
             pass
+
+

@@ -15,7 +15,7 @@ class Drug(models.Model):
     description = models.CharField(max_length=100, null=True)
     stock_level = models.PositiveIntegerField(default=0)
     expiry_date = models.DateField()
-    price = models.DecimalField(max_digits=15, decimal_places=2)
+    price = models.IntegerField()
 
     def __str__(self):
         return self.name + ' ' + self.brand_name
@@ -25,7 +25,7 @@ class CurrentMedication(models.Model):
     
     patient = models.ForeignKey(Patient, on_delete=models.CASCADE,related_name='patient_medication')
     doctor = models.ForeignKey(Doctor, on_delete=models.CASCADE,related_name='doctor_request')
-    appointment = models.ForeignKey(BookedAppointment, on_delete=models.CASCADE,related_name='appointment')
+    Appointment = models.ForeignKey(BookedAppointment, on_delete=models.CASCADE,related_name='appointment')
 
 
 

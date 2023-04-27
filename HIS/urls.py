@@ -18,11 +18,15 @@ from django.urls import path,include
 from Hospital import views
 from django.conf.urls.static import static
 from django.conf import settings
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('<int:id>', views.media),
+    path('hospital/',include('Hospital.urls')),
+    path('auth/',include('djoser.urls')),
+    path('auth/',include('djoser.urls.jwt')),
+    path('records/',include('Records.urls')),
     path('__debug__/', include('debug_toolbar.urls')),
-    path('auth/', include('djoser.urls')),
-    path('auth/', include('djoser.urls.jwt')),
-    
+    path('',include('Core.urls')),
 ]
 urlpatterns += static(settings.MEDIA_URL , document_root = settings.MEDIA_ROOT)

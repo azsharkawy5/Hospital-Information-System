@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
+from datetime import timedelta
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -38,15 +39,16 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'phonenumber_field',
-    'rest_framework',
-    'debug_toolbar',
-    'djoser',
+    'django_filters',
     'Core',
+    'rest_framework',
+    'djoser',
+    'debug_toolbar',
     'Hospital',
+    'Records',
+    'phonenumber_field',
     'Appointments',
     'Bills',
-    'Records',
     'Lab_Radiology',
     'Pharmacy',
 ]
@@ -54,18 +56,20 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 INTERNAL_IPS = [
-
-    '127.0.0.1',
-
+    # ...
+    "127.0.0.1",
+    # ...
 ]
+
 ROOT_URLCONF = 'HIS.urls'
 
 TEMPLATES = [
@@ -96,7 +100,7 @@ DATABASES = {
         'NAME': 'his',
         'HOST': 'localhost',
         'USER': 'root',
-        'PASSWORD': 'mohab123',
+        'PASSWORD': '1234'
     }
 }
 
@@ -149,8 +153,18 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS':'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE':5,
 }
 
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
+   "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+}
+ 
+DJOSER = {
+    'SERIALIZERS':{
+        'user_create':'Core.serializer.UserCreateSerializer',
+        'current_user':'Core.serializer.UserSerializer'
+    }
 }

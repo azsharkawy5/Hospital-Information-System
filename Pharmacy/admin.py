@@ -4,8 +4,6 @@ from .models import *
 
 
 # Compare this snippet from pharmacy\views.py:
-
-
 admin.site.register(Drug)
 admin.site.register(CurrentMedication)
 admin.site.register(DrugRequestDetail)
