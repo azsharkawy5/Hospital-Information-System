@@ -7,16 +7,17 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import pagination
 from rest_framework import exceptions
+from rest_framework.mixins import ListModelMixin
 
 
 
 from pprint import pprint
-
+from .permissions import *
 # this is the view for the all  DoctorSchedule
 class DoctorScheduleViewSet(viewsets.ModelViewSet):
     serializer_class = DoctorScheduleSerializer
     filter_backends = [DjangoFilterBackend] 
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [CreateDoctorScheduleOrUpdate]
     filterset_fields = '__all__'
     pagination_class = pagination.PageNumberPagination
     def get_queryset(self):
@@ -31,9 +32,10 @@ class DoctorScheduleViewSet(viewsets.ModelViewSet):
 
 
 # this is the view for the all  DoctorSlots
-class DoctorSlotsViewSet(viewsets.ModelViewSet):
+class DoctorSlotsViewSet(ListModelMixin, viewsets.GenericViewSet):
     serializer_class = DoctorSlotsSerializer
     filter_backends = [DjangoFilterBackend]
+    permission_classes = [CanAccess]
     def get_queryset(self):
         date = self.request.query_params.get('date')
         schedule = self.request.query_params.get('schedule')
@@ -50,6 +52,21 @@ class BookedAppoitnmentViewSet(viewsets.ModelViewSet):
     serializer_class = BookedAppoitnmentSerilizer
     queryset = BookedAppointment.objects.all()
     pagination_class = pagination.PageNumberPagination
-    sorted_by = ['date']
+    permission_classes = [BookAppointment]
+    sorted_by = '__all__'
     filter_backends = [DjangoFilterBackend]
     filterset_fields = '__all__'
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_doctor:
+            return BookedAppointment.objects.filter(doctor=user)
+        elif user.is_patient:
+            return BookedAppointment.objects.filter(patient=user)
+        elif user.is_receptionist:
+            return BookedAppointment.objects.all()
+        else:
+            return BookedAppointment.objects.none()
+
+
+

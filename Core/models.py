@@ -16,5 +16,6 @@ class User(AbstractUser):
     phone = PhoneNumberField()
     national_id = models.CharField(max_length=14,unique=1)
     address = models.CharField(max_length=300)
+    
  
     

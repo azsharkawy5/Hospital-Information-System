@@ -10,3 +10,6 @@ admin.site.register(Nurse)
 admin.site.register(Patient)
 admin.site.register(Specialty)
 admin.site.register(Department)
+admin.site.register(Receptionist)
+admin.site.register(MedicalSecretary)
+
