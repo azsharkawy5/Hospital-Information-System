@@ -46,3 +46,6 @@ class Receptionist(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
     def __str__(self) -> str:
         return str(self.user.first_name+" "+self.user.last_name)
+    
+class MedicalSecretary(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
