@@ -19,27 +19,50 @@ class SpecialtySerializer(serializers.ModelSerializer):
         model = Specialty
         fields = ['id','specialty']    
 
-class DoctorSerializer(WritableNestedModelSerializer,serializers.ModelSerializer):
+class DoctorSerializer(serializers.ModelSerializer):
+    specialty = SpecialtySerializer()
+    department = DepartmentSerializer()
+    user = UserSerializer()
     class Meta:
         model = Doctor
         fields = ['id','user','specialty','medical_license','department','image']
+
+class CreateDoctorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Doctor
+        fields = ['id','user','specialty','medical_license','department','image']
+
+class UpdateDoctorSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Doctor
+        fields = ['user','specialty','medical_license','department','image']
     specialty = SpecialtySerializer()
     department = DepartmentSerializer()
-    #user = UserSerializer(read_only =1)
+    user = UpdateUserSerializer
 
 
 class NurseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Nurse
         fields = ['user','specialty','medical_license']
-    #user = UserSerializer(User)
+
+class MedicalSecretarySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MedicalSecretary
+        fields = ['id','user']
+
+class ReceptionistSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Receptionist
+        fields = ['id','user']
+
 
 
 class PatientSerializer(WritableNestedModelSerializer,serializers.ModelSerializer):
     address = AddressSerializer()
     class Meta:
         model = Patient
-        fields = ['user','id','address']
+        fields = ['id','user','address']
     user = UserSerializer()
 
 class CreatePatientSerializer(WritableNestedModelSerializer,serializers.ModelSerializer):
