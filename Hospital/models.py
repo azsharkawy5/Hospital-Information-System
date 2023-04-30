@@ -4,9 +4,13 @@ from django.utils.safestring import mark_safe
 
 class Department(models.Model):
     dapartment_name = models.CharField(max_length=100)
+    def __str__(self) -> str:
+        return self.dapartment_name
 
 class Specialty(models.Model):
     specialty = models.CharField(max_length=100)
+    def __str__(self) -> str:
+        return self.specialty
 
 class Address(models.Model):
     apartment_number = models.PositiveSmallIntegerField()
@@ -29,7 +33,7 @@ class Doctor(models.Model):
 
 class Nurse(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='user_nurse')
-    specialty = models.CharField(max_length=255)
+    specialty = models.ForeignKey(Specialty,related_name='nurse_specialty',on_delete=models.CASCADE)
     medical_license = models.CharField(max_length=255)
 
     
@@ -49,3 +53,5 @@ class Receptionist(models.Model):
     
 class MedicalSecretary(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
+    def __str__(self) -> str:
+        return str(self.user.first_name+" "+self.user.last_name)
