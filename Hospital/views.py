@@ -19,12 +19,7 @@ class DoctorViewSet(ModelViewSet):
     search_fields = ['department__dapartment_name']
     filterset_fields = ['department__dapartment_name']
     queryset = Doctor.objects.select_related('user').select_related('department').select_related('specialty').all()
-    permission_classes = [IsAuthenticatedOrReadOnly]
-
-    def get_permissions(self):
-        if self.request.method == 'POST':
-            return [IsAdminUser()]
-        return [IsAuthenticatedOrReadOnly()]
+    permission_classes = [IsAdminOrReadOnly]
     
     def get_serializer_class(self):
         if self.request.user.is_staff:
@@ -34,12 +29,15 @@ class DoctorViewSet(ModelViewSet):
         
     @action(detail=False,methods=['GET','PATCH'],permission_classes=[IsDoctor])
     def me (self,request):
-        doctor = Doctor.objects.get(user=request.user)   
+        try:
+            doctor = Doctor.objects.get(user_id=request.user.id)   
+        except Doctor.DoesNotExist:
+            return Response('ok')
         if request.method == 'GET':
             serializer = DoctorSerializer(doctor)
             return Response(serializer.data)
         elif request.method == 'PATCH' :
-            serializer =DoctorSerializer(doctor,data=request.data)
+            serializer =UpdateDoctorSerializer(doctor,data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
             return Response(serializer.data)
@@ -71,7 +69,6 @@ class PatientViewSet(ModelViewSet):
     def me (self,request):
 
         patient = Patient.objects.get(user_id=request.user.id)    
-        #patient = Patient.objects.get(user_id=request.user.id)
         if request.method == 'GET':
             serializer = PatientSerializer(patient)
             return Response(serializer.data)
