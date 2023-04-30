@@ -8,27 +8,43 @@ from rest_framework.permissions import IsAdminUser,IsAuthenticated,IsAuthenticat
 from rest_framework.decorators import action
 from rest_framework.response import Response
 from .serializer import *
-from .permissions import IsPatient
+from .permissions import *
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 # Create your views here.
-def media(request,id):
-    media = get_object_or_404(Doctor,pk = id).image
-    return render(request, 'media/media.html',{'media' : media})
+
         
 class DoctorViewSet(ModelViewSet):
-    filter_backends = [DjangoFilterBackend,SearchFilter,]
-    search_fields = ['user__first_name','user_last_name','department','specialty']
-    filterset_fields = ['department','specialty']
+    filter_backends = [DjangoFilterBackend,SearchFilter]
+    search_fields = ['department__dapartment_name']
+    filterset_fields = ['department__dapartment_name']
     queryset = Doctor.objects.select_related('user').select_related('department').select_related('specialty').all()
-    serializer_class = DoctorSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get_permissions(self):
-        if self.request.method == 'GET':
-            return [AllowAny()]
-        elif self.request.method in ['POST','PATCH','DELETE']:
+        if self.request.method == 'POST':
             return [IsAdminUser()]
-        else :
-            return [IsAuthenticated()]
+        return [IsAuthenticatedOrReadOnly()]
+    
+    def get_serializer_class(self):
+        if self.request.user.is_staff:
+            return CreateDoctorSerializer
+        return DoctorSerializer
+
+        
+    @action(detail=False,methods=['GET','PATCH'],permission_classes=[IsDoctor])
+    def me (self,request):
+        doctor = Doctor.objects.get(user=request.user)   
+        if request.method == 'GET':
+            serializer = DoctorSerializer(doctor)
+            return Response(serializer.data)
+        elif request.method == 'PATCH' :
+            serializer =DoctorSerializer(doctor,data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data)
+        
+
 
 class NurseViewSet(ModelViewSet):
     queryset = Nurse.objects.select_related('user').all()
@@ -37,7 +53,8 @@ class NurseViewSet(ModelViewSet):
 
 class PatientViewSet(ModelViewSet):
     filter_backends = [DjangoFilterBackend,SearchFilter,]
-    search_fields = ['user__first_name','user_last_name']
+    search_fields = ['user__first_name','user__last_name']
+    filterset_fields = ['user__first_name','user__last_name']
     queryset = Patient.objects.select_related('user').select_related('address').all()
     permission_classes = [IsAdminUser]
     
@@ -48,7 +65,7 @@ class PatientViewSet(ModelViewSet):
             return UpdatePatientSerializer
         elif self.request.user:
             return PatientSerializer
-        
+ 
         
     @action(detail=False,methods=['GET','PATCH'],permission_classes=[IsPatient])
     def me (self,request):
@@ -78,3 +95,14 @@ class SpecialtyViewSet(ModelViewSet):
 class AddressViewSet(ModelViewSet):
     queryset = Address.objects.all()
     serializer_class = AddressSerializer
+
+class MedicalSecretaryViewSet(ModelViewSet):
+    queryset = MedicalSecretary.objects.select_related('user').all()
+    serializer_class = MedicalSecretarySerializer
+    permission_classes = [IsAdminUser]
+
+    
+class ReceptionistViewSet(ModelViewSet):
+    queryset = Receptionist.objects.select_related('user').all()
+    serializer_class =ReceptionistSerializer 
+    permission_classes = [IsAdminUser]
