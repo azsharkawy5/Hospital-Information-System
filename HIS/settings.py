@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django_filters',
     'Core',
     'rest_framework',
+    'corsheaders',
     'djoser',
     'debug_toolbar',
     'Hospital',
@@ -57,6 +58,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -69,6 +71,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
     # ...
 ]
+CORS_ORIGIN_ALLOW_ALL = True
 
 ROOT_URLCONF = 'HIS.urls'
 
@@ -159,7 +162,7 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
    'AUTH_HEADER_TYPES': ('JWT',),
-   "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
+   "ACCESS_TOKEN_LIFETIME": timedelta(days=10),
 }
  
 DJOSER = {
@@ -168,3 +171,4 @@ DJOSER = {
         'current_user':'Core.serializer.UserSerializer'
     }
 }
+ALLOWED_HOSTS = ['127.0.0.1','localhost','504f-156-193-43-93.ngrok-free.app']
