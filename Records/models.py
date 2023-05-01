@@ -56,7 +56,7 @@ class SurgeryInfo(models.Model):
 class Visits(models.Model):
     patient = models.ForeignKey(Patient,on_delete=models.CASCADE,related_name='inpatient')
     doctor = models.ForeignKey(Doctor,on_delete=models.PROTECT,related_name='patient_doctor')
-    nurse = models.ForeignKey(Nurse,on_delete=models.PROTECT,related_name='patient_nurse')
+    #nurse = models.ForeignKey(Nurse,on_delete=models.PROTECT,related_name='patient_nurse')
     room_number = models.PositiveSmallIntegerField()
     bed_number = models.PositiveSmallIntegerField()
     admission_date = models.DateField()
