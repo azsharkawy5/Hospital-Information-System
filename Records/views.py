@@ -24,19 +24,18 @@ class EmergencyContactViewSet(ModelViewSet):
 
      
 class VisitViewSet(ModelViewSet):
+    filter_backends = [SearchFilter,DjangoFilterBackend]
+    filterset_fields = ['admission_date','discharge_date']
+    search_fields = ['doctor__user__first_name','doctor__user__last_name','patient__user__first_name','patient__user__last_name']
     serializer_class = VisitsSerializer
-
+    permission_classes = [IsReceptionistOrReadOnly]
     def get_queryset(self):
-        queryset = Visits.objects.select_related('patient').select_related('doctor').select_related('nurse').all()
-        patient_id = self.kwargs.get('patient_pk')
-        if patient_id is not None:
-            queryset = queryset.filter(patient_id=patient_id)
-        return queryset              
+        if self.request.user.role == 'patient':
+            return Visits.objects.select_related('patient').select_related('doctor').filter(patient__user=self.request.user).all()
+        elif self.request.user.role == 'doctor':
+            return Visits.objects.select_related('patient').select_related('doctor').filter(doctor__user=self.request.user).all()
+        return Visits.objects.select_related('patient').select_related('doctor').all()
 
-        
-    def get_serializer_context(self):
-        pateint = self.kwargs.get('patient_pk')
-        return {'patient_id':str(pateint)}
 
     
 class SurgeryViewSet(ModelViewSet):
