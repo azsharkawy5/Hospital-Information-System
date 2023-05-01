@@ -71,6 +71,14 @@ class IsMedicalSecretaryOrReadOnly(BasePermission):
             request.method in ('GET', 'HEAD', 'OPTIONS') 
         )
 
+class IsMedicalSecretaryOrPatientReadOnly(BasePermission):
+     
+    def has_permission(self, request, view):
+        return bool(
+            request.user.role == 'medical_secretary' or
+            request.user.role == 'patient' and request.method == 'GET' 
+        )
+
 class IsMedicalSecretaryOrPatientDoctorReadOnly(BasePermission):
      
     def has_permission(self, request, view):
