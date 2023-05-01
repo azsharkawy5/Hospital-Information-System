@@ -8,13 +8,14 @@ class EmergencyContactSerializer(serializers.ModelSerializer):
     address = AddressSerializer()
     class Meta:
         model = EmergencyContact
-        fields = ['id','first_name','last_name','email','gender','phone_1','phone_2','relative_relation','address']
+        fields = ['id','first_name','last_name','email','gender','phone_1','phone_2','relative_relation','national_id','address']
 
     def create(self, validated_data):
-            patient_id =self.context['patient_id']
+            user = self.context['user']
+            patient =Patient.objects.get(user=user)
             address_data = validated_data.pop('address')
             address = Address.objects.create(**address_data)
-            return EmergencyContact.objects.create(patient_id=patient_id,address=address,**validated_data)
+            return EmergencyContact.objects.create(patient_id=patient.id,address=address,**validated_data)
     
 
 
