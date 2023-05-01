@@ -19,3 +19,12 @@ class IsAdminOrReadOnly(BasePermission):
             request.user.role == 'admin' or
             request.method in ('GET', 'HEAD', 'OPTIONS') 
         )
+     
+
+class IsPatientOrReadOnly(BasePermission):
+     
+    def has_permission(self, request, view):
+        return bool(
+            request.user.role == 'patient' or
+            request.method in ('GET', 'HEAD', 'OPTIONS') 
+        )
