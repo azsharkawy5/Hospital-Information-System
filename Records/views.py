@@ -28,7 +28,7 @@ class VisitViewSet(ModelViewSet):
     filterset_fields = ['admission_date','discharge_date']
     search_fields = ['doctor__user__first_name','doctor__user__last_name','patient__user__first_name','patient__user__last_name']
     serializer_class = VisitsSerializer
-    permission_classes = [IsReceptionistOrReadOnly]
+    permission_classes = [IsReceptionistOrPatientDoctorReadOnly]
     def get_serializer_class(self):
         if self.request.method == 'GET':
             return ViewVisitSerializer
@@ -43,18 +43,24 @@ class VisitViewSet(ModelViewSet):
 
     
 class SurgeryViewSet(ModelViewSet):
-    serializer_class = SergeryInfoSerializer
-    
+    filter_backends = [SearchFilter,DjangoFilterBackend]
+    filterset_fields = ['surgery_type','doctor']
+    search_fields = ['doctor__user__first_name','doctor__user__last_name','patient__user__first_name','patient__user__last_name','surgery_type']
+    permission_classes = [IsMedicalSecretaryOrPatientDoctorReadOnly]
+    def get_serializer_class(self):
+        if self.request.user.role == 'patient':
+            return PatientSurgeryInfoSerializer
+        elif self.request.user.role == 'doctor':
+            return DoctorSurgeryInfoSerializer
+        return SurgeryInfoSerializer
     def get_queryset(self):
-        queryset = SurgeryInfo.objects.select_related('patient__user').select_related('doctor__user').all() 
-        patient_id = self.kwargs.get('patient_pk')
-        if patient_id is not None:
-            queryset = queryset.filter(patient_id=patient_id)
-        return queryset
+        if self.request.user.role == 'patient':
+            return SurgeryInfo.objects.filter(patient__user=self.request.user).select_related('patient__user').select_related('patient__user').all()
+        elif self.request.user.role == 'doctor':
+            return SurgeryInfo.objects.filter(doctor__user=self.request.user).select_related('patient__user').select_related('patient__user').all()
+        return  SurgeryInfo.objects.select_related('patient__user').select_related('patient__user').all()
 
-    def get_serializer_context(self):
-        pateint = self.kwargs.get('patient_pk')
-        return {'patient_id':str(pateint)}
+
 
 
 class VitalViewSet(ModelViewSet):
