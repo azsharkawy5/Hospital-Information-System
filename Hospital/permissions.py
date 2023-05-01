@@ -28,3 +28,19 @@ class IsPatientOrReadOnly(BasePermission):
             request.user.role == 'patient' or
             request.method in ('GET', 'HEAD', 'OPTIONS') 
         )
+
+
+class IsReceptionist(BasePermission):
+
+    def has_permission(self, request, view):
+        print(request.user.role)
+        return bool(request.user.role =='receptionist' and  request.user)
+    
+
+class IsReceptionistOrReadOnly(BasePermission):
+     
+    def has_permission(self, request, view):
+        return bool(
+            request.user.role == 'receptionist' or
+            request.method in ('GET', 'HEAD', 'OPTIONS') 
+        )
