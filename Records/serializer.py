@@ -19,14 +19,36 @@ class EmergencyContactSerializer(serializers.ModelSerializer):
     
 
 
-class SergeryInfoSerializer(serializers.ModelSerializer):
+class SurgeryInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = SurgeryInfo
-        fields = ['id','doctor_id','surgery_type','date','time','documentation']
+        fields = ['patient','doctor','surgery_type','date','time','documentation']
 
-    def create(self, validated_data):
-            patient_id =self.context['patient_id']
-            return SurgeryInfo.objects.create(patient_id=patient_id,**validated_data)
+class PatientSurgeryInfoSerializer(serializers.ModelSerializer):
+    doctor = serializers.SerializerMethodField()
+    class Meta:
+        model = SurgeryInfo
+        fields = ['doctor','surgery_type','date','time','documentation']
+    def get_doctor(self,obj):
+        doctor = obj.doctor
+        return {
+            'id':doctor.id,
+            'first_name':doctor.user.first_name,
+            'last_name':doctor.user.last_name,
+        }
+
+class DoctorSurgeryInfoSerializer(serializers.ModelSerializer):
+    patient = serializers.SerializerMethodField()
+    class Meta:
+        model = SurgeryInfo
+        fields = ['patient','surgery_type','date','time','documentation']
+    def get_patient(self,obj):
+        patient = obj.patient
+        return {
+            'id':patient.id,
+            'first_name':patient.user.first_name,
+            'last_name':patient.user.last_name,
+        }
 
 
 class VisitsSerializer(serializers.ModelSerializer):
