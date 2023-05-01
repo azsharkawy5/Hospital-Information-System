@@ -84,21 +84,25 @@ class ViewVisitSerializer(serializers.ModelSerializer):
 class VitalSerializer(serializers.ModelSerializer):
     class Meta:
         model = Vitals
+        fields = ['id','patient','date','time','height','weight','blood_pressure','heart_rate','temperature']
+
+class PatientVitalSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vitals
         fields = ['id','date','time','height','weight','blood_pressure','heart_rate','temperature']
 
-    def create(self, validated_data):
-        patient_id =self.context['patient_id']
-        return Vitals.objects.create(patient_id=patient_id,**validated_data)
-   
 
 class MedicalRecordSerializer(WritableNestedModelSerializer,serializers.ModelSerializer):
     class Meta:
         model = MedicalRecord
+        fields =['patient','diagnosis','allergies','family_history']
+
+
+class PatientMedicalRecordSerializer(WritableNestedModelSerializer,serializers.ModelSerializer):
+    class Meta:
+        model = MedicalRecord
         fields =['diagnosis','allergies','family_history']
 
-    def create(self, validated_data):
-        patient_id =self.context['patient_id']
-        return MedicalRecord.objects.create(patient_id=patient_id,**validated_data)
 
 class PatientAllRecordrSerializer(serializers.ModelSerializer):
     medical_record = serializers.SerializerMethodField()
@@ -120,7 +124,7 @@ class PatientAllRecordrSerializer(serializers.ModelSerializer):
     
     def get_surgeries(self,obj):
         surgeries = obj.patient_surgery.all()
-        return SergeryInfoSerializer(surgeries,many=True).data
+        return SurgeryInfoSerializer(surgeries,many=True).data
     
     def get_medical_record(self,obj):
         medical_record = obj.patient_record
