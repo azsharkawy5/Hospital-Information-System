@@ -32,12 +32,30 @@ class SergeryInfoSerializer(serializers.ModelSerializer):
 class VisitsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Visits
-        fields = ['id','doctor_id','nurse_id','room_number','bed_number','admission_date','discharge_date','diagnosis','notes']
-     
-    def create(self, validated_data):
-        patient_id =self.context['patient_id']
-        return Visits.objects.create(patient_id=patient_id,**validated_data)
+        fields = ['id','patient','doctor','room_number','bed_number','admission_date','discharge_date','diagnosis','notes']
+
     
+class ViewVisitSerializer(serializers.ModelSerializer):
+    patient = serializers.SerializerMethodField()
+    doctor = serializers.SerializerMethodField()
+    class Meta:
+        model = Visits
+        fields = ['id','patient','doctor','diagnosis','admission_date','discharge_date']
+
+    def get_patient(self,obj):
+        patient = obj.patient
+        return{
+            'id':patient.id,
+            'first_name':patient.user.first_name,
+            'last_name':patient.user.last_name
+        }
+    def get_doctor(self,obj):
+        doctor = obj.doctor
+        return{
+            'id':doctor.id,
+            'first_name':doctor.user.first_name,
+            'last_name':doctor.user.last_name
+        }
 
 
     
