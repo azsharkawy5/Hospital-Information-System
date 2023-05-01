@@ -29,12 +29,16 @@ class VisitViewSet(ModelViewSet):
     search_fields = ['doctor__user__first_name','doctor__user__last_name','patient__user__first_name','patient__user__last_name']
     serializer_class = VisitsSerializer
     permission_classes = [IsReceptionistOrReadOnly]
+    def get_serializer_class(self):
+        if self.request.method == 'GET':
+            return ViewVisitSerializer
+        return VisitsSerializer
     def get_queryset(self):
         if self.request.user.role == 'patient':
-            return Visits.objects.select_related('patient').select_related('doctor').filter(patient__user=self.request.user).all()
+            return Visits.objects.select_related('patient__user').select_related('doctor__user').filter(patient__user=self.request.user).all()
         elif self.request.user.role == 'doctor':
-            return Visits.objects.select_related('patient').select_related('doctor').filter(doctor__user=self.request.user).all()
-        return Visits.objects.select_related('patient').select_related('doctor').all()
+            return Visits.objects.select_related('patient__user').select_related('doctor__user').filter(doctor__user=self.request.user).all()
+        return Visits.objects.select_related('patient__user').select_related('doctor__user').all() #need some optimization
 
 
     
