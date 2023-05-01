@@ -1,21 +1,26 @@
 from .models import *
 from rest_framework.viewsets import ModelViewSet,ReadOnlyModelViewSet
 from .serializer import *
+from Hospital.permissions import *
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
+
+
 
 class EmergencyContactViewSet(ModelViewSet):
     serializer_class = EmergencyContactSerializer
-
+    filter_backends = [SearchFilter]
+    search_fields = ['first_name','last_name']
+    permission_classes = [IsPatientOrReadOnly]
     def get_queryset(self):
-        queryset = EmergencyContact.objects.select_related('patient__user').all()
-        patient_id = self.kwargs.get('patient_pk')
-        if patient_id is not None:
-            queryset = queryset.filter(patient_id=patient_id)
-        return queryset        
-
-    
+        if self.request.user.role=='patient':
+            return EmergencyContact.objects.filter(patient__user=self.request.user).select_related('address').all()
+        return EmergencyContact.objects.select_related('address').all()
     def get_serializer_context(self):
-        pateint = self.kwargs.get('patient_pk')
-        return {'patient_id':str(pateint)}
+        return {'user':self.request.user}
+
+
+
 
      
 class VisitViewSet(ModelViewSet):
