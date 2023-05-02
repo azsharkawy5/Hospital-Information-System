@@ -16,6 +16,10 @@ class EmergencyContactViewSet(ModelViewSet):
         if self.request.user.role=='patient':
             return EmergencyContact.objects.filter(patient__user=self.request.user).select_related('address').all()
         return EmergencyContact.objects.select_related('address').all()
+    def get_serializer_class(self):
+        if self.request.user.role == 'patient':
+            return EmergencyContactSerializer
+        return ReceptionistEmergencyContactSerializer
     def get_serializer_context(self):
         return {'user':self.request.user}
 
@@ -55,45 +59,45 @@ class SurgeryViewSet(ModelViewSet):
         return SurgeryInfoSerializer
     def get_queryset(self):
         if self.request.user.role == 'patient':
-            return SurgeryInfo.objects.filter(patient__user=self.request.user).select_related('patient__user').select_related('patient__user').all()
+            return SurgeryInfo.objects.filter(patient__user=self.request.user).select_related('patient__user').select_related('doctor__user').all()
         elif self.request.user.role == 'doctor':
-            return SurgeryInfo.objects.filter(doctor__user=self.request.user).select_related('patient__user').select_related('patient__user').all()
+            return SurgeryInfo.objects.filter(doctor__user=self.request.user).select_related('patient__user').select_related('doctor__user').all()
         return  SurgeryInfo.objects.select_related('patient__user').select_related('patient__user').all()
 
 
 
 
 class VitalViewSet(ModelViewSet):
-    serializer_class = VitalSerializer
-
+    filter_backends = [SearchFilter,DjangoFilterBackend]
+    filterset_fields = ['patient','date']
+    search_fields = ['patient__user__first_name','patient__user__last_name']
+    permission_classes = [IsMedicalSecretaryOrPatientReadOnly] 
+    def get_serializer_class(self):
+        if self.request.user.role == 'patient':
+            return PatientVitalSerializer
+        return VitalSerializer
     def get_queryset(self):
-        queryset =  Vitals.objects.select_related('patient__user').all()
-        patient_id = self.kwargs.get('patient_pk')
-        print(patient_id)
-        if patient_id is not None:
-            queryset = queryset.filter(patient_id=patient_id)
-        return queryset
-
+        if self.request.user.role == 'patient':
+            return Vitals.objects.select_related('patient__user').filter(patient__user=self.request.user).all()
+        return Vitals.objects.select_related('patient__user').all()
     
-    def get_serializer_context(self):
-        pateint = self.kwargs.get('patient_pk')
-        return {'patient_id':pateint}
 
 
 class MedicalRecordViewSet(ModelViewSet):
-    serializer_class = MedicalRecordSerializer
-
+    filter_backends = [SearchFilter,DjangoFilterBackend]
+    filterset_fields = ['patient']
+    search_fields = ['patient__user__first_name','patient__user__last_name']
+    permission_classes = [IsMedicalSecretaryOrPatientDoctorReadOnly]
+    def get_serializer_class(self):
+        if self.request.user.role == 'patient':
+            return PatientMedicalRecordSerializer
+        return MedicalRecordSerializer
     def get_queryset(self):
-        queryset = MedicalRecord.objects.select_related('patient__user').all()
-        patient_id = self.kwargs.get('patient_pk')
-        if patient_id is not None:
-            queryset = queryset.filter(patient_id=patient_id)
-        return queryset        
+        if self.request.user.role == 'patient':
+            return MedicalRecord.objects.filter(patient__user=self.request.user).select_related('patient__user').all()
+        return MedicalRecord.objects.select_related('patient').select_related('patient__user').all()
 
-        
-    def get_serializer_context(self):
-        pateint = self.kwargs.get('patient_pk')
-        return {'patient_id':str(pateint)}        
+     
 
 class PatientRecordsViewSet(ReadOnlyModelViewSet):
     queryset = Patient.objects.select_related('patient_record').prefetch_related('patient_vital').prefetch_related('patient_surgery').prefetch_related('patient_surgery').prefetch_related('inpatient').all()
