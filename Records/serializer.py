@@ -16,6 +16,17 @@ class EmergencyContactSerializer(serializers.ModelSerializer):
             address_data = validated_data.pop('address')
             address = Address.objects.create(**address_data)
             return EmergencyContact.objects.create(patient_id=patient.id,address=address,**validated_data)
+
+class ReceptionistEmergencyContactSerializer(serializers.ModelSerializer):
+    address = AddressSerializer()
+    class Meta:
+        model = EmergencyContact
+        fields = ['id','patient','first_name','last_name','email','gender','phone_1','phone_2','relative_relation','national_id','address']
+
+    def create(self, validated_data):
+            address_data = validated_data.pop('address')
+            address = Address.objects.create(**address_data)
+            return EmergencyContact.objects.create(address=address,**validated_data)
     
 
 
