@@ -1,8 +1,7 @@
 import Hospital
 from . import views
 from .models import *
-from rest_framework_nested import routers 
-
+from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register('emergency-contact',views.EmergencyContactViewSet,basename='emergencycontact')
