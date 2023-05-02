@@ -25,8 +25,8 @@ class Doctor(models.Model):
     department = models.ForeignKey(Department,related_name='doctor_department',on_delete=models.CASCADE)
     image = models.ImageField(upload_to='Hospital/files/media')
 
-    def __str__(self) -> str:
-        return str(self.user.first_name+" "+self.user.last_name)
+    # def __str__(self) -> str:
+    #     return str(self.user.first_name+" "+self.user.last_name)
     
     def mediaAdmin(self):
         return mark_safe('<img src="{}" width="100" />'.format(self.image.url))
@@ -38,25 +38,25 @@ class Nurse(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='user_nurse')
     specialty = models.ForeignKey(Specialty,related_name='nurse_specialty',on_delete=models.CASCADE)
     medical_license = models.CharField(max_length=255)
-    def __str__(self) -> str:
-        return str(self.user.first_name+" "+self.user.last_name)
+    # def __str__(self) -> str:
+    #     return str(self.user.first_name+" "+self.user.last_name)
         
     
 class Patient(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE,related_name='user_patient')
     address = models.ForeignKey(Address,related_name='patient_address',on_delete=models.CASCADE)
-    def __str__(self) -> str:
-        return str(self.user.first_name+" "+self.user.last_name)
+    # def __str__(self) -> str:
+    #     return str(self.user.first_name+" "+self.user.last_name)
     
     def name(self):
         return self.__str__()
     
 class Receptionist(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    def __str__(self) -> str:
-        return str(self.user.first_name+" "+self.user.last_name)
+    # def __str__(self) -> str:
+    #     return str(self.user.first_name+" "+self.user.last_name)
     
 class MedicalSecretary(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)
-    def __str__(self) -> str:
-        return str(self.user.first_name+" "+self.user.last_name)
+    # def __str__(self) -> str:
+    #     return str(self.user.first_name+" "+self.user.last_name)
