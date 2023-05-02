@@ -54,15 +54,12 @@ class PatientViewSet(ModelViewSet):
     search_fields = ['user__first_name','user__last_name']
     filterset_fields = ['user__first_name','user__last_name']
     queryset = Patient.objects.select_related('user').select_related('address').all()
-    permission_classes = [IsAdminUser]
+    permission_classes = [IsAdminOrReceptionistOrPaitent]
     
     def get_serializer_class(self):
-        if self.request.user.is_staff:
+        if self.request.user.role == 'admin' or self.request.user.role == 'receptionist':
             return CreatePatientSerializer
-        elif self.request.method == 'PUT' and self.request.user:
-            return UpdatePatientSerializer
-        elif self.request.user:
-            return PatientSerializer
+        return PatientSerializer
  
         
     @action(detail=False,methods=['GET','PATCH'],permission_classes=[IsPatient])
