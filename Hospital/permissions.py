@@ -19,6 +19,14 @@ class IsAdminOrReadOnly(BasePermission):
             request.user.role == 'admin' or
             request.method in ('GET', 'HEAD', 'OPTIONS') 
         )
+class IsAdminOrReceptionistOrPaitent(BasePermission):
+     
+     def has_permission(self, request, view):
+        return bool(
+            request.user.role == 'admin' or
+            request.user.role == 'receptionist' or
+            request.user.role == 'patient' and request.method == 'POST'
+        )
      
 
 class IsPatientOrReadOnly(BasePermission):
@@ -26,7 +34,8 @@ class IsPatientOrReadOnly(BasePermission):
     def has_permission(self, request, view):
         return bool(
             request.user.role == 'patient' or
-            request.method in ('GET', 'HEAD', 'OPTIONS') 
+            request.user.role == 'receptionist'
+            #request.method in ('GET', 'HEAD', 'OPTIONS') 
         )
 
 
