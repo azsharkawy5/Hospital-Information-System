@@ -20,4 +20,4 @@ class UpdateUserSerializer(serializers.ModelSerializer):
     # national_id=serializers.CharField(read_only=True)
     class Meta:
         model = User
-        fields = ['first_name','last_name','phone_1','phone_2','gender']
+        fields = ['first_name','last_name','phone_1','phone_2','email','gender']
